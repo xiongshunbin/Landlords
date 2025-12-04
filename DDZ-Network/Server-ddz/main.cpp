@@ -8,6 +8,8 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "TcpServer.h"
 
+#include "MyTest.h"
+
 int main(int argc, char* argv[])
 {
 	// spdlog日志库的使用
@@ -41,9 +43,12 @@ int main(int argc, char* argv[])
 	//chdir("/home/mushan/Test");
 #endif
 
-	// 启动服务器
-	TcpServer* server = new TcpServer(port, 4);
-	server->run();
+	// // 启动服务器
+	// TcpServer* server = new TcpServer(port, 4);
+	// server->run();
+
+	MyTest t;
+	t.test();
 
 	return 0;
 }
