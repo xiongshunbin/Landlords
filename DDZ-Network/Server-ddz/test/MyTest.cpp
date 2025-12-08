@@ -3,10 +3,8 @@
 //
 
 #include "MyTest.h"
-
-#include <iostream>
-
 #include "Person.pb.h"
+#include <iostream>
 
 void MyTest::test()
 {

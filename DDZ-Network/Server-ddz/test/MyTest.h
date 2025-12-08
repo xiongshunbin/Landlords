@@ -9,7 +9,7 @@
 class MyTest
 {
 public:
-    void test();
+    static void test();
 };
 
 
