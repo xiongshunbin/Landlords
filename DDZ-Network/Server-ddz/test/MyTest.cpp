@@ -13,7 +13,11 @@ void MyTest::test()
     p.set_id(10);
     p.set_age(32);
     p.set_sex("man");
-    p.set_name("lucy");
+    p.add_name("路飞");
+    p.add_name("艾斯");
+    p.add_name("萨博");
+    p.mutable_addr()->set_addr("北京市长安街天安门");
+    p.mutable_addr()->set_num(1001);
 
     // 序列化对象p, 最终得到一个字符串
     std::string output;
@@ -22,5 +26,11 @@ void MyTest::test()
     // 反序列化数据
     Person pp;
     pp.ParseFromString(output);
-    std::cout << pp.id() << ", " << pp.name() << ", " << pp.sex() << ", " << pp.age() << std::endl;
+    std::cout << pp.id() << ", " << pp.sex() << ", " << pp.age() << std::endl;
+    std::cout << pp.addr().addr() << pp.addr().num() << "号" << std::endl;
+    int size = pp.name_size();
+    for (int i = 0; i < size; ++i)
+    {
+        std::cout << pp.name(i) << std::endl;
+    }
 }
