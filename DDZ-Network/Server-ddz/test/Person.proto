@@ -1,5 +1,13 @@
 syntax = "proto3";
 
+enum Color
+{
+    Red = 0;
+    Green = 1;
+    Yellow = 2;
+    Blue = 3;
+}
+
 message Address
 {
     int32 num = 1;
@@ -13,4 +21,5 @@ message Person
     bytes sex = 3;
     int32 age = 4;
     Address addr = 5;
+    Color color = 6;
 }
