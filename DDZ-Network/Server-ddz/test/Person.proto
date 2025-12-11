@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "Address.proto";
+package Erbing;
 
 enum Color
 {
@@ -15,6 +16,6 @@ message Person
     repeated bytes name = 2;
     bytes sex = 3;
     int32 age = 4;
-    Address addr = 5;
+    Dabing.Address addr = 5;
     Color color = 6;
 }
