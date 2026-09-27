@@ -6,12 +6,14 @@ project(control)
 set(HEADERS
     BGMControl.h
     GameControl.h
+    DataManager.h
 )
 
 # 取出当前目录下的所有源文件
 set(SRC
     BGMControl.cpp
     GameControl.cpp
+    DataManager.cpp
 )
 
 # 将当前目录下的所有源文件制作成静态库

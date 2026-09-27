@@ -13,6 +13,7 @@ set(HEADERS
     Loading.h
     MyButton.h
     ScorePanel.h
+    Login.h
 )
 
 # 取出当前目录下的所有源文件
@@ -26,6 +27,7 @@ set(SRC
     Loading.cpp
     MyButton.cpp
     ScorePanel.cpp
+    Login.cpp
 )
 
 # 将当前目录下的所有源文件制作成静态库
