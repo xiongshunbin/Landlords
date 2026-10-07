@@ -1,7 +1,9 @@
-﻿#include "Robot.h"
+#include "Robot.h"
 #include "Strategy.h"
 #include "RobotGrabLord.h"
 #include "RobotPlayHand.h"
+
+#include <QThreadPool>
 
 Robot::Robot(QObject* parent) : Player(parent)
 {
@@ -10,22 +12,28 @@ Robot::Robot(QObject* parent) : Player(parent)
 
 void Robot::prepareCallLord()
 {
-	RobotGrabLord* subThread = new RobotGrabLord(this);
-	connect(subThread, &QThread::finished, this, [=]() {
-		subThread->deleteLater();
-	});
+    RobotGrabLord* task = new RobotGrabLord(this);
+    QThreadPool::globalInstance()->start(task);
 
-	subThread->start();
+    // RobotGrabLord* subThread = new RobotGrabLord(this);
+    // connect(subThread, &QThread::finished, this, [=]() {
+    // 	subThread->deleteLater();
+    // });
+
+    // subThread->start();
 }
 
 void Robot::preparePlayHand()
 {
-	RobotPlayHand* subThread = new RobotPlayHand(this);
-	connect(subThread, &QThread::finished, this, [=]() {
-		subThread->deleteLater();
-	});
+    RobotPlayHand* task = new RobotPlayHand(this);
+    QThreadPool::globalInstance()->start(task);
 
-	subThread->start();
+    // RobotPlayHand* subThread = new RobotPlayHand(this);
+    // connect(subThread, &QThread::finished, this, [=]() {
+    // 	subThread->deleteLater();
+    // });
+
+    // subThread->start();
 }
 
 void Robot::thinkCallLord()

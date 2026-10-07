@@ -6,6 +6,10 @@
 #include <QLabel>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QThreadPool>
+
+#include "DataManager.h"
+#include "GamePanel.h"
 
 Login::Login(QWidget *parent) : QDialog(parent)
 {
@@ -14,6 +18,9 @@ Login::Login(QWidget *parent) : QDialog(parent)
     regexCheck();
 
     initConnect();
+
+    // 设置线程池最大线程数量
+    QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
 }
 
 Login::~Login()
@@ -264,7 +271,8 @@ void Login::onLogin()
     bool password_flag = verifyData(edit_login_userPassword);
     if (name_flag && password_flag)
     {
-
+        GamePanel* panel = new GamePanel;
+        panel->show();
     }
 }
 
@@ -285,6 +293,8 @@ void Login::onSettingsConfirm()
     bool port_flag = verifyData(edit_config_port);
     if (adress_flag && port_flag)
     {
-
+        DataManager& instance = DataManager::getInstance();
+        instance.setServerIp(edit_config_address->text().toUtf8());
+        instance.setServerPort(edit_config_port->text().toUtf8());
     }
 }

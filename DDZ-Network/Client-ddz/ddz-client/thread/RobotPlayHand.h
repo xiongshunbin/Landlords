@@ -1,9 +1,9 @@
-﻿#pragma once
+#pragma once
 
-#include <QThread>
+#include <QRunnable>
 #include "Player.h"
 
-class RobotPlayHand : public QThread
+class RobotPlayHand : public QObject, public QRunnable
 {
 	Q_OBJECT
 public:
