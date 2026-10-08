@@ -29,6 +29,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/strategy
     ${PROJECT_SOURCE_DIR}/thread
     ${PROJECT_SOURCE_DIR}/windows
+    ${PROJECT_SOURCE_DIR}/tcp
 )
 
 # 添加子目录
@@ -38,6 +39,7 @@ add_subdirectory(player)
 add_subdirectory(strategy)
 add_subdirectory(thread)
 add_subdirectory(windows)
+add_subdirectory(tcp)
 
 # 链接子目录中生成的静态库文件
 link_libraries(windows player thread strategy card control)
