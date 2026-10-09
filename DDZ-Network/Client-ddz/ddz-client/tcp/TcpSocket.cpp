@@ -44,14 +44,37 @@ bool TcpSocket::connectToServer(QByteArray ip, unsigned short port)
     return flag;
 }
 
-QByteArray TcpSocket::receiveMessage(int timeout)
+QByteArray TcpSocket::receiveMessage(int timeout_sec)
 {
+    bool flag = readTimeout(timeout_sec);
+    if (flag)
+    {
+        // 接收数据 = 数据头 + 数据块
+        int headLen = 0;
+        int ret = readn(reinterpret_cast<char*>(&headLen), sizeof(int));
 
+    }
 }
 
-void TcpSocket::sendMessage(QByteArray msg, int timeout)
+bool TcpSocket::sendMessage(QByteArray msg, int timeout_sec)
 {
+    bool flag = writeTimeout(timeout_sec);
+    if (flag)
+    {
+        // 发送数据 = 数据头 + 数据块
+        int headLen = htonl(msg.size());
+        int length = sizeof(int) + msg.size();
+        char* data = new char[length];
+        assert(data != nullptr);
+        memcpy(data, &headLen, sizeof(int));
+        memcpy(data + sizeof(int), msg.data(), msg.size());
 
+        int ret = writen(data, length);
+        flag = (ret == length) ? true : false;
+
+        delete [] data;
+    }
+    return flag;
 }
 
 void TcpSocket::disConnect()
@@ -89,7 +112,7 @@ bool TcpSocket::readTimeout(int timeout_sec)
     timeout.tv_sec = timeout_sec;
     timeout.tv_usec = 0;
     int ret = select(nfds, &reads, NULL, NULL, &timeout);
-    bool flag = (ret == -1) ? true : false;
+    bool flag = ((ret > 0) && (FD_ISSET(m_socket, &reads))) ? true : false;
     return flag;
 }
 
@@ -113,6 +136,46 @@ bool TcpSocket::writeTimeout(int timeout_sec)
     timeout.tv_sec = timeout_sec;
     timeout.tv_usec = 0;
     int ret = select(nfds, NULL, &writes, NULL, &timeout);
-    bool flag = (ret == -1) ? true : false;
+    bool flag = ((ret > 0) && FD_ISSET(m_socket, &writes)) ? true : false;
     return flag;
+}
+
+int TcpSocket::readn(char *buffer, int count)
+{
+    int last = count;   // 剩余的字节数
+    int size = 0;       // 每次读出的字节数
+    char* pt = buffer;
+    while(last > 0)
+    {
+        if ((size = recv(m_socket, pt, last, 0)) != -1)
+        {
+            perror("recv");
+            return -1;
+        }
+        else if (size == 0)
+        {
+            break;
+        }
+        pt += size;
+        last -= size;
+    }
+    return count - last;
+}
+
+int TcpSocket::writen(const char *buffer, int count)
+{
+    int last = count;   // 剩余的字节数
+    int size = 0;       // 每次写入的字节数
+    const char* pt = buffer;
+    while(last > 0)
+    {
+        if ((size = send(m_socket, pt, last, 0)) != -1)
+        {
+            perror("send");
+            return -1;
+        }
+        pt += size;
+        last -= size;
+    }
+    return count - last;
 }
