@@ -47,13 +47,28 @@ bool TcpSocket::connectToServer(QByteArray ip, unsigned short port)
 QByteArray TcpSocket::receiveMessage(int timeout_sec)
 {
     bool flag = readTimeout(timeout_sec);
+    QByteArray array = QByteArray();
     if (flag)
     {
         // 接收数据 = 数据头 + 数据块
         int headLen = 0;
         int ret = readn(reinterpret_cast<char*>(&headLen), sizeof(int));
+        if (ret != sizeof(int))
+        {
+            return array;
+        }
+        int length = ntohl(headLen);
+        char* data = new char[length];
+        assert(data != nullptr);
 
+        ret = readn(data, length);
+        if (ret == length)
+        {
+            array = QByteArray(data, length);
+        }
+        delete [] data;
     }
+    return array;
 }
 
 bool TcpSocket::sendMessage(QByteArray msg, int timeout_sec)

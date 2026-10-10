@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+enum RequestCode
+{
+    Login = 0;
+    Register = 1;
+}
+
+enum ResponseCode
+{
+    LoginOK = 0;
+    RegisterOK = 1;
+}
+
+message Infomation
+{
+    string userName = 1;
+    string data1 = 2;
+    string data2 = 3;
+    string data3 = 4;
+    RequestCode reqcode = 5;
+    ResponseCode rescode = 6;
+}
