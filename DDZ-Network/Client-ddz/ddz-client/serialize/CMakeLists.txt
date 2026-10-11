@@ -6,13 +6,13 @@ include_directories("C:/Protobuf/include")
 
 # 取出当前目录下的所有头文件
 set(HEADERS
-    Infomation.pb.h
+    Information.pb.h
     Codec.h
 )
 
 # 取出当前目录下的所有源文件
 set(SRC
-    Infomation.pb.cc
+    Information.pb.cc
     Codec.cpp
 )
 

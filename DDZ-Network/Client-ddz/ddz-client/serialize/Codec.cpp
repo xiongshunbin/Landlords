@@ -2,10 +2,46 @@
 
 Codec::Codec(Message *msg)
 {
-
+    reloadData(msg);
 }
 
 Codec::Codec(QByteArray msg)
 {
+    reloadData(msg);
+}
 
+QByteArray Codec::encodeMessage()
+{
+    std::string out;
+    m_obj.SerializeToString(&out);
+    return QByteArray::fromStdString(out);
+}
+
+std::unique_ptr<Message> Codec::decodeMessage()
+{
+    std::string data = m_msg.toStdString();
+    m_obj.ParseFromString(data);
+    std::unique_ptr<Message> msg = std::make_unique<Message>();
+    msg->userName = QByteArray::fromStdString(m_obj.username());
+    msg->data1 = QByteArray::fromStdString(m_obj.data1());
+    msg->data2 = QByteArray::fromStdString(m_obj.data2());
+    msg->data3 = QByteArray::fromStdString(m_obj.data3());
+    msg->reqcode = m_obj.reqcode();
+    msg->rescode = m_obj.rescode();
+    return msg;
+}
+
+void Codec::reloadData(QByteArray msg)
+{
+    m_msg = msg;
+}
+
+void Codec::reloadData(Message *msg)
+{
+    m_obj.set_username(msg->userName.toStdString());
+    m_obj.set_data1(msg->data1.toStdString());
+    m_obj.set_data2(msg->data2.toStdString());
+    m_obj.set_data3(msg->data3.toStdString());
+    m_obj.set_reqcode(msg->reqcode);
+    m_obj.set_rescode(msg->rescode);
 }
