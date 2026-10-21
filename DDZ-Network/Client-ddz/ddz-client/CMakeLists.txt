@@ -23,6 +23,8 @@ set(PROJECT_SOURCES
 
 # 添加头文件目录
 include_directories(
+    "C:/OpenSSL-Win64/include"
+
     ${PROJECT_SOURCE_DIR}/card
     ${PROJECT_SOURCE_DIR}/control
     ${PROJECT_SOURCE_DIR}/player
@@ -31,6 +33,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/windows
     ${PROJECT_SOURCE_DIR}/tcp
     ${PROJECT_SOURCE_DIR}/serialize
+    ${PROJECT_SOURCE_DIR}/crypto
 )
 
 # 添加子目录
@@ -42,9 +45,10 @@ add_subdirectory(thread)
 add_subdirectory(windows)
 add_subdirectory(tcp)
 add_subdirectory(serialize)
+add_subdirectory(crypto)
 
 # 链接子目录中生成的静态库文件
-link_libraries(windows player thread strategy card control)
+link_libraries(windows player thread strategy card control crypto)
 
 # 添加资源文件
 qt5_add_resources(RES res.qrc)
