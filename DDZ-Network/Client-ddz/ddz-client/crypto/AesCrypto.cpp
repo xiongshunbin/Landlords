@@ -2,24 +2,24 @@
 #include <openssl/aes.h>
 #include <QCryptographicHash>
 
-const QMap<AlgorithmType, QPair<int, AlgorithmFunc>> AesCrypto::m_algorithms = {
-    {AlgorithmType::AES_ECB_128, {16, EVP_aes_128_ecb}},
-    {AlgorithmType::AES_CBC_128, {16, EVP_aes_128_cbc}},
-    {AlgorithmType::AES_CFB_128, {16, EVP_aes_128_cfb128}},
-    {AlgorithmType::AES_OFB_128, {16, EVP_aes_128_ofb}},
-    {AlgorithmType::AES_CTR_128, {16, EVP_aes_128_ctr}},
+const QMap<AesCrypto::AlgorithmType, QPair<int, AesCrypto::AlgorithmFunc>> AesCrypto::m_algorithms = {
+    {AesCrypto::AES_ECB_128, {16, EVP_aes_128_ecb}},
+    {AesCrypto::AES_CBC_128, {16, EVP_aes_128_cbc}},
+    {AesCrypto::AES_CFB_128, {16, EVP_aes_128_cfb128}},
+    {AesCrypto::AES_OFB_128, {16, EVP_aes_128_ofb}},
+    {AesCrypto::AES_CTR_128, {16, EVP_aes_128_ctr}},
 
-    {AlgorithmType::AES_ECB_192, {24, EVP_aes_192_ecb}},
-    {AlgorithmType::AES_CBC_192, {24, EVP_aes_192_cbc}},
-    {AlgorithmType::AES_CFB_192, {24, EVP_aes_192_cfb128}},
-    {AlgorithmType::AES_OFB_192, {24, EVP_aes_192_ofb}},
-    {AlgorithmType::AES_CTR_192, {24, EVP_aes_192_ctr}},
+    {AesCrypto::AES_ECB_192, {24, EVP_aes_192_ecb}},
+    {AesCrypto::AES_CBC_192, {24, EVP_aes_192_cbc}},
+    {AesCrypto::AES_CFB_192, {24, EVP_aes_192_cfb128}},
+    {AesCrypto::AES_OFB_192, {24, EVP_aes_192_ofb}},
+    {AesCrypto::AES_CTR_192, {24, EVP_aes_192_ctr}},
 
-    {AlgorithmType::AES_ECB_256, {32, EVP_aes_256_ecb}},
-    {AlgorithmType::AES_CBC_256, {32, EVP_aes_256_cbc}},
-    {AlgorithmType::AES_CFB_256, {32, EVP_aes_256_cfb128}},
-    {AlgorithmType::AES_OFB_256, {32, EVP_aes_256_ofb}},
-    {AlgorithmType::AES_CTR_256, {32, EVP_aes_256_ctr}},
+    {AesCrypto::AES_ECB_256, {32, EVP_aes_256_ecb}},
+    {AesCrypto::AES_CBC_256, {32, EVP_aes_256_cbc}},
+    {AesCrypto::AES_CFB_256, {32, EVP_aes_256_cfb128}},
+    {AesCrypto::AES_OFB_256, {32, EVP_aes_256_ofb}},
+    {AesCrypto::AES_CTR_256, {32, EVP_aes_256_ctr}},
 };
 
 AesCrypto::AesCrypto(AlgorithmType type, const QByteArray &key, QObject *parent) : QObject(parent)

@@ -6,42 +6,42 @@
 #include <QMap>
 #include <openssl/evp.h>
 
-enum class AlgorithmType : uint8_t
-{
-    // 16 byte
-    AES_ECB_128 = 80,
-    AES_CBC_128 = 81,
-    AES_CFB_128 = 82,
-    AES_OFB_128 = 83,
-    AES_CTR_128 = 84,
-
-    // 24 byte
-    AES_ECB_192 = 120,
-    AES_CBC_192 = 121,
-    AES_CFB_192 = 122,
-    AES_OFB_192 = 123,
-    AES_CTR_192 = 124,
-
-    // 32 byte
-    AES_ECB_256 = 160,
-    AES_CBC_256 = 161,
-    AES_CFB_256 = 162,
-    AES_OFB_256 = 163,
-    AES_CTR_256 = 164,
-};
-
-/// 定义函数指针
-using AlgorithmFunc = const EVP_CIPHER *(*)(void);
-
 class AesCrypto : public QObject
 {
     Q_OBJECT
 public:
-    enum class CryptoType : uint8_t
+    enum AlgorithmType
+    {
+        // 16 byte
+        AES_ECB_128 = 80,
+        AES_CBC_128 = 81,
+        AES_CFB_128 = 82,
+        AES_OFB_128 = 83,
+        AES_CTR_128 = 84,
+
+        // 24 byte
+        AES_ECB_192 = 120,
+        AES_CBC_192 = 121,
+        AES_CFB_192 = 122,
+        AES_OFB_192 = 123,
+        AES_CTR_192 = 124,
+
+        // 32 byte
+        AES_ECB_256 = 160,
+        AES_CBC_256 = 161,
+        AES_CFB_256 = 162,
+        AES_OFB_256 = 163,
+        AES_CTR_256 = 164,
+    };
+
+    enum CryptoType
     {
         DECRYPTO = 0,
         ENCRYPTO = 1
     };
+
+    /// 定义函数指针
+    using AlgorithmFunc = const EVP_CIPHER *(*)(void);
 
     AesCrypto(AlgorithmType type, const QByteArray& key, QObject* parent = nullptr);
     ~AesCrypto();
