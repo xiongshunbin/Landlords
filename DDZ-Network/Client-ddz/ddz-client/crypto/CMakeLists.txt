@@ -6,12 +6,14 @@ project(crypto)
 set(HEADERS
     AesCrypto.h
     RsaCrypto.h
+    Base64.h
 )
 
 # 取出当前目录下的所有源文件
 set(SRC
     AesCrypto.cpp
     RsaCrypto.cpp
+    Base64.cpp
 )
 
 # 将当前目录下的所有源文件制作成静态库

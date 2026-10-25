@@ -1,3 +1,4 @@
+#include "Base64.h"
 #include "RsaCrypto.h"
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
@@ -128,7 +129,8 @@ QByteArray RsaCrypto::pubKeyEncrypt(QByteArray data)
     ret = EVP_PKEY_encrypt(ctx, out, &outlen, reinterpret_cast<const unsigned char *>(data.data()), data.size());
     assert(ret == 1);
 
-    QByteArray retStr(reinterpret_cast<const char*>(out), outlen);
+    Base64 base64;
+    QByteArray retStr = base64.encode(reinterpret_cast<const char*>(out), outlen);
 
     // 释放资源
     delete [] out;
@@ -150,6 +152,9 @@ QByteArray RsaCrypto::priKeyDecrypt(QByteArray data)
     // 设置填充方式
     ret = EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING);
     assert(ret == 1);
+
+    Base64 base64;
+    data = base64.decode(data);
 
     // 使用密钥进行解密
     size_t outlen = 0;
@@ -199,7 +204,8 @@ QByteArray RsaCrypto::sign(QByteArray data, QCryptographicHash::Algorithm hash)
     ret = EVP_PKEY_sign(ctx, out, &outlen, reinterpret_cast<const unsigned char *>(md.data()), md.size());
     assert(ret == 1);
 
-    QByteArray retStr(reinterpret_cast<const char*>(out), outlen);
+    Base64 base64;
+    QByteArray retStr = base64.encode(reinterpret_cast<const char*>(out), outlen);
 
     // 释放资源
     delete [] out;
@@ -210,6 +216,9 @@ QByteArray RsaCrypto::sign(QByteArray data, QCryptographicHash::Algorithm hash)
 
 bool RsaCrypto::verify(QByteArray sign, QByteArray data, QCryptographicHash::Algorithm hash)
 {
+    Base64 base64;
+    sign = base64.decode(sign);
+
     // 计算哈希值
     QCryptographicHash h(hash);
     h.addData(data);

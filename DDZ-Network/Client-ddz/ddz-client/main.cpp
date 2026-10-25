@@ -5,6 +5,7 @@
 #include "Login.h"
 #include "AesCrypto.h"
 #include "RsaCrypto.h"
+#include "Base64.h"
 #include <QDebug>
 
 void test()
@@ -27,10 +28,10 @@ void test()
     // 非对称加密可加密的最大数据长度为: 密钥的位数 / 8 - 11; (11为填充数据)
     QByteArray temp = "天长地久有时尽，此恨绵绵无绝期。";
     QByteArray ciphertext = rsa1.pubKeyEncrypt(temp);
+    qDebug() << "公钥加密的密文: " << ciphertext.data();
 
     RsaCrypto rsa2("private.pem", RsaCrypto::PRIVATE_KEY);
     QByteArray plaintext = rsa2.priKeyDecrypt(ciphertext);
-
     qDebug() << plaintext.data();
     if (plaintext == temp)
     {
@@ -38,8 +39,21 @@ void test()
     }
 
     QByteArray sig = rsa2.sign(origin);
+    qDebug() << "私钥签名的密文: " << sig.data();
+
     bool flag = rsa1.verify(sig, origin);
-    qDebug() << "flag = " << flag;
+    qDebug() << "签名校验结果: flag = " << flag;
+
+    const char data[] = {0x01, 0x02, 0x03, 0x04};
+    QByteArray str(data, sizeof(data));
+    Base64 b64;
+    QByteArray en_str = b64.encode(str);
+    qDebug() << "encode str: " << en_str.data();
+    QByteArray de_str = b64.decode(en_str);
+    if (de_str == str)
+    {
+        qDebug() << "Base64 编解码成功!";
+    }
 }
 
 int main(int argc, char *argv[])
