@@ -67,6 +67,7 @@ CMakeUserPresets.json
 .idea/
 *.iml
 *.ipr
+.clion.source.upload.marker
 
 # CMake
 cmake-build-*/
