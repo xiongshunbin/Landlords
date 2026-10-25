@@ -10,6 +10,8 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/reactor
         ${PROJECT_SOURCE_DIR}/tcp
         ${PROJECT_SOURCE_DIR}/thread
+        ${PROJECT_SOURCE_DIR}/crypto
+        "/usr/local/ssl/include/"
         # 测试目录
         ${PROJECT_SOURCE_DIR}/test
 )
@@ -20,12 +22,13 @@ add_subdirectory(http)
 add_subdirectory(reactor)
 add_subdirectory(tcp)
 add_subdirectory(thread)
+add_subdirectory(crypto)
 
 # 测试目录
 add_subdirectory(test)
 
 # 链接子目录中生成的静态库文件
-link_libraries(tcp http reactor thread common test)
+link_libraries(tcp http reactor thread common test crypto)
 
 # 指定可执行文件生成到对应的目录中
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)

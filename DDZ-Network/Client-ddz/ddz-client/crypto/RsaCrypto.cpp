@@ -92,14 +92,14 @@ void RsaCrypto::generateRsaKey(KeyLength bits, QByteArray pub, QByteArray pri)
     EVP_PKEY_CTX_free(ctx);
 
     // 将密钥写入到磁盘文件
-    BIO * bio = BIO_new_file(pri, "wb");
+    BIO * bio = BIO_new_file(pri.data(), "wb");
     assert(bio != NULL);
     ret = PEM_write_bio_PrivateKey(bio, m_priKey, NULL, NULL, 0, NULL, NULL);
     assert(ret == 1);
     BIO_flush(bio);
     BIO_free(bio);
 
-    bio = BIO_new_file(pub, "wb");
+    bio = BIO_new_file(pub.data(), "wb");
     assert(bio != NULL);
     ret = PEM_write_bio_PUBKEY(bio, m_priKey);
     assert(ret == 1);

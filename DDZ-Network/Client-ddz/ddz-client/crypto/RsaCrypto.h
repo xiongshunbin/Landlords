@@ -6,6 +6,7 @@
  */
 
 #include <QObject>
+#include <QByteArray>
 #include <QCryptographicHash>
 #include <openssl/evp.h>
 #include <QMap>
@@ -33,7 +34,7 @@ public:
     explicit RsaCrypto(QObject* parent = nullptr);
 
     // 构造对象并加载密钥文件中的数据到内存中
-    explicit RsaCrypto(QByteArray fileName, KeyType type, QObject* parent = nullptr);
+    RsaCrypto(QByteArray fileName, KeyType type, QObject* parent = nullptr);
 
     ~RsaCrypto();
 
