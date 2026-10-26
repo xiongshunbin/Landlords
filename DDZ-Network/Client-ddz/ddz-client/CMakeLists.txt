@@ -48,7 +48,7 @@ add_subdirectory(serialize)
 add_subdirectory(crypto)
 
 # 链接子目录中生成的静态库文件
-link_libraries(windows player thread strategy card control crypto)
+link_libraries(windows player thread strategy card control crypto tcp)
 
 # 添加资源文件
 qt5_add_resources(RES res.qrc)

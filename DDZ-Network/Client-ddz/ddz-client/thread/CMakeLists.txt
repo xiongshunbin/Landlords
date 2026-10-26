@@ -6,12 +6,14 @@ project(thread)
 set(HEADERS
     RobotGrabLord.h
     RobotPlayHand.h
+    Communication.h
 )
 
 # 取出当前目录下的所有源文件
 set(SRC
     RobotGrabLord.cpp
     RobotPlayHand.cpp
+    Communication.cpp
 )
 
 # 将当前目录下的所有源文件制作成静态库

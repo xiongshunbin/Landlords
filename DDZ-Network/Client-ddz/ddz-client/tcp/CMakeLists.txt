@@ -15,4 +15,4 @@ set(SRC
 # 将当前目录下的所有源文件制作成静态库
 add_library(tcp ${SRC} ${HEADERS})
 
-target_link_libraries(tcp PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(tcp PRIVATE Qt${QT_VERSION_MAJOR}::Core Ws2_32)
