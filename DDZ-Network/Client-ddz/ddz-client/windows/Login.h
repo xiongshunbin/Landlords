@@ -7,6 +7,8 @@
 #include <QCheckBox>
 #include <QStackedWidget>
 
+#include "Codec.h"
+
 class Login : public QDialog
 {
     Q_OBJECT
@@ -24,10 +26,15 @@ public:
 
     bool verifyData(QLineEdit *edit);
 
+    // 连接服务器
+    void startConnect(Message *msg);
+
 public slots:
     void onLogin();
     void onRegister();
     void onSettingsConfirm();
+
+    void onConnectFailed();
 
 private:
     void createLoginPage(QWidget* loginPage);
@@ -58,6 +65,9 @@ private:
 
     QPushButton* btn_toConfigServerPage;
     QPushButton* btn_returnLoginPage;
+
+private:
+    bool m_isConnected = false;
 };
 
 #endif // LOGIN_H

@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 
+#include "Communication.h"
 
 // 单例模式
 class DataManager
@@ -19,11 +20,13 @@ public:
     void setUserName(const QByteArray& name);
     void setServerIp(const QByteArray& ip);
     void setServerPort(const QByteArray& port);
+    void setCommunication(Communication* comm);
 
     // 获取数据
     const QByteArray& getUserName() const;
     const QByteArray& getServerIp() const;
     const QByteArray& getServerPort() const;
+    Communication* getCommunication() const;
 
 private:
     DataManager() = default;
@@ -33,6 +36,8 @@ private:
     QByteArray m_userName;
     QByteArray m_serverIp;
     QByteArray m_serverPort;
+
+    Communication* m_comm;
 };
 
 #endif // DATAMANAGER_H

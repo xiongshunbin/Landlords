@@ -2,8 +2,8 @@ syntax = "proto3";
 
 enum RequestCode
 {
-    Login = 0;
-    Register = 1;
+    UserLogin = 0;
+    UserRegister = 1;
 };
 
 enum ResponseCode

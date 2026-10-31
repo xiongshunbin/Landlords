@@ -21,6 +21,11 @@ void DataManager::setServerPort(const QByteArray &port)
     m_serverPort = port;
 }
 
+void DataManager::setCommunication(Communication *comm)
+{
+    m_comm = comm;
+}
+
 const QByteArray &DataManager::getUserName() const
 {
     return m_userName;
@@ -34,4 +39,9 @@ const QByteArray &DataManager::getServerIp() const
 const QByteArray &DataManager::getServerPort() const
 {
     return m_serverPort;
+}
+
+Communication *DataManager::getCommunication() const
+{
+    return m_comm;
 }

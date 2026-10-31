@@ -59,6 +59,9 @@ public:
     // 计算哈希值
     std::string result(Type type = Type::Hex);
 
+    static std::string hash(std::string data, HashAlgorithm algorithm, Type type = Type::Binary);
+    static int hashLength(HashAlgorithm algorithm);
+
 private:
     EVP_MD_CTX* m_ctx = NULL;
     HashAlgorithm m_algorithm;

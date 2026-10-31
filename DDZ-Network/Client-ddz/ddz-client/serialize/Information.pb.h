@@ -53,14 +53,14 @@ template<> ::Information* Arena::CreateMaybeMessage<::Information>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 
 enum RequestCode : int {
-  Login = 0,
-  Register = 1,
+  UserLogin = 0,
+  UserRegister = 1,
   RequestCode_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   RequestCode_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool RequestCode_IsValid(int value);
-constexpr RequestCode RequestCode_MIN = Login;
-constexpr RequestCode RequestCode_MAX = Register;
+constexpr RequestCode RequestCode_MIN = UserLogin;
+constexpr RequestCode RequestCode_MAX = UserRegister;
 constexpr int RequestCode_ARRAYSIZE = RequestCode_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* RequestCode_descriptor();

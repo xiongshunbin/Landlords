@@ -7,9 +7,11 @@
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
 #include <QThreadPool>
+#include <QCryptographicHash>
+#include <QMessageBox>
 
 #include "DataManager.h"
-#include "GamePanel.h"
+#include "Communication.h"
 
 Login::Login(QWidget *parent) : QDialog(parent)
 {
@@ -265,14 +267,36 @@ bool Login::verifyData(QLineEdit* edit)
     return true;
 }
 
+void Login::startConnect(Message *msg)
+{
+    if (!m_isConnected)
+    {
+        Communication* task = new Communication(msg);
+        connect(task, &Communication::connectFailed, this, &Login::onConnectFailed);
+        m_isConnected = true;
+        QThreadPool::globalInstance()->start(task);
+    }
+    else
+    {
+        // 服务器通讯
+        DataManager::getInstance().getCommunication()->sendMessage(msg);
+    }
+}
+
 void Login::onLogin()
 {
     bool name_flag = verifyData(edit_login_userName);
     bool password_flag = verifyData(edit_login_userPassword);
     if (name_flag && password_flag)
     {
-        GamePanel* panel = new GamePanel;
-        panel->show();
+        Message msg;
+        msg.userName = edit_login_userName->text().toUtf8();
+        msg.reqcode = RequestCode::UserLogin;
+        QByteArray passwd = edit_login_userPassword->text().toUtf8();
+        msg.data1 = QCryptographicHash::hash(passwd, QCryptographicHash::Sha256);
+
+        // 连接服务器
+        startConnect(&msg);
     }
 }
 
@@ -283,7 +307,15 @@ void Login::onRegister()
     bool phone_flag = verifyData(edit_register_phoneNumber);
     if (name_flag && password_flag && phone_flag)
     {
+        Message msg;
+        msg.userName = edit_register_userName->text().toUtf8();
+        msg.reqcode = RequestCode::UserRegister;
+        QByteArray passwd = edit_register_userPassword->text().toUtf8();
+        msg.data1 = QCryptographicHash::hash(passwd, QCryptographicHash::Sha256);
+        msg.data2 = edit_register_phoneNumber->text().toUtf8();
 
+        // 连接服务器
+        startConnect(&msg);
     }
 }
 
@@ -297,4 +329,10 @@ void Login::onSettingsConfirm()
         instance.setServerIp(edit_config_address->text().toUtf8());
         instance.setServerPort(edit_config_port->text().toUtf8());
     }
+}
+
+void Login::onConnectFailed()
+{
+    QMessageBox::critical(this, u8"连接服务器", u8"连接服务器失败!");
+    m_isConnected = false;
 }

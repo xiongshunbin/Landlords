@@ -69,13 +69,13 @@ const char descriptor_table_protodef_Information_2eproto[] PROTOBUF_SECTION_VARI
   "serName\030\001 \001(\t\022\r\n\005data1\030\002 \001(\t\022\r\n\005data2\030\003 "
   "\001(\t\022\r\n\005data3\030\004 \001(\t\022\035\n\007reqcode\030\005 \001(\0162\014.Re"
   "questCode\022\036\n\007rescode\030\006 \001(\0162\r.ResponseCod"
-  "e*&\n\013RequestCode\022\t\n\005Login\020\000\022\014\n\010Register\020"
-  "\001*+\n\014ResponseCode\022\013\n\007LoginOK\020\000\022\016\n\nRegist"
-  "erOK\020\001b\006proto3"
+  "e*.\n\013RequestCode\022\r\n\tUserLogin\020\000\022\020\n\014UserR"
+  "egister\020\001*+\n\014ResponseCode\022\013\n\007LoginOK\020\000\022\016"
+  "\n\nRegisterOK\020\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_Information_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Information_2eproto = {
-    false, false, 254, descriptor_table_protodef_Information_2eproto,
+    false, false, 262, descriptor_table_protodef_Information_2eproto,
     "Information.proto",
     &descriptor_table_Information_2eproto_once, nullptr, 0, 1,
     schemas, file_default_instances, TableStruct_Information_2eproto::offsets,
