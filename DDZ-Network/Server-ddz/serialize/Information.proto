@@ -10,6 +10,7 @@ enum ResponseCode
 {
     LoginOK = 0;
     RegisterOK = 1;
+    RsaFenFa = 2;
 };
 
 message Information

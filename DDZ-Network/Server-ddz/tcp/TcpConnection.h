@@ -14,6 +14,9 @@ public:
 	TcpConnection(int fd, EventLoop* evLoop);
 	~TcpConnection();
 
+	// 准备密钥
+	void prepareSecretKey();
+
 private:
 	static int processRead(void* arg);
 	static int processWrite(void* arg);
@@ -25,7 +28,4 @@ private:
 	Channel* m_channel = nullptr;
 	Buffer* m_readBuf = nullptr;
 	Buffer* m_writeBuf = nullptr;
-	// http 协议
-	HttpRequest* m_request = nullptr;
-	HttpResponse* m_response = nullptr;
 };

@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "RsaCrypto.h"
 #include "spdlog/spdlog.h"
 
 TcpServer::TcpServer(unsigned short port, int threadNum) 
@@ -65,6 +66,12 @@ void TcpServer::run()
 {
 	spdlog::get("basic_logger")->info("服务器程序已经启动了......");
 	spdlog::get("logger_console")->info("服务器程序已经启动了......");
+
+	// 生成密钥对
+	RsaCrypto* rsa = new RsaCrypto;
+	rsa->generateRsaKey(RsaCrypto::BITS_2K);
+	delete rsa;
+
 	// 启动线程池
 	m_threadPool->run();
 	// 添加检测的任务

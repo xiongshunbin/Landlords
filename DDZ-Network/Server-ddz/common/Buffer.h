@@ -14,7 +14,9 @@ public:
 	// 写内存 1.直接写 2.接收套接字数据
 	int appendString(const char* data, int size);
 	int appendString(const char* data);
-	int appendString(std::string msg);
+	int appendString(const std::string msg);
+	int appendHead(const int length);
+	int appendPackage(const std::string data);
 	int socketRead(int fd);
 
 	// 根据\r\n取出一行, 找到其在数据块中的位置, 返回该位置

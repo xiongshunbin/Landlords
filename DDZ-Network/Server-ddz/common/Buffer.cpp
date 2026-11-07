@@ -4,6 +4,7 @@
 #include <cstring>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <netinet/in.h>
 #include <sys/socket.h>
 
 Buffer::Buffer(int size) : m_capacity(size)
@@ -76,9 +77,24 @@ int Buffer::appendString(const char* data)
 	return ret;
 }
 
-int Buffer::appendString(std::string msg)
+int Buffer::appendString(const std::string msg)
 {
 	int ret = appendString(msg.data());
+	return ret;
+}
+
+int Buffer::appendHead(int length)
+{
+	int len = htonl(length);
+	std::string head(reinterpret_cast<char*>(&len), sizeof(int));
+	int ret = appendString(head);
+	return ret;
+}
+
+int Buffer::appendPackage(const std::string data)
+{
+	int ret = appendHead(data.size());
+	ret += appendString(data);
 	return ret;
 }
 

@@ -34,8 +34,8 @@ private:
 
 private:
     QByteArray m_userName;
-    QByteArray m_serverIp;
-    QByteArray m_serverPort;
+    QByteArray m_serverIp = "120.26.60.196";
+    QByteArray m_serverPort = 10000;
 
     Communication* m_comm;
 };

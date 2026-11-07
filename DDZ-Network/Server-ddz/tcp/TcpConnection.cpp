@@ -1,18 +1,21 @@
 ﻿#include "TcpConnection.h"
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
+#include <sstream>
 #include "TcpServer.h"
 #include "spdlog/spdlog.h"
+#include "Codec.h"
+#include "RsaCrypto.h"
 
 TcpConnection::TcpConnection(int fd, EventLoop* evLoop) : m_evLoop(evLoop)
 {
 	m_readBuf = new Buffer(10240);
 	m_writeBuf = new Buffer(10240);
+
 	m_name = "Connection-" + std::to_string(fd);
-	// http 协议
-	m_request = new HttpRequest;
-	m_response = new HttpResponse;
-	m_channel = new Channel(fd, FDEvent::ReadEvent, processRead, processWrite, destroy, this);
+	prepareSecretKey();
+	m_channel = new Channel(fd, FDEvent::WriteEvent, processRead, processWrite, destroy, this);
 	evLoop->addTask(m_channel, ElemType::ADD);
 }
 
@@ -23,11 +26,27 @@ TcpConnection::~TcpConnection()
 	{
 		delete m_readBuf;
 		delete m_writeBuf;
-		delete m_request;
-		delete m_response;
 		m_evLoop->freeChannel(m_channel);
 	}
 	spdlog::get("basic_logger")->info("连接断开, 释放资源, ConnectionName: {}", m_name);
+}
+
+void TcpConnection::prepareSecretKey()
+{
+	// 读取公钥
+	std::ifstream ifs("public.pem");
+	std::stringstream sstr;
+	sstr << ifs.rdbuf();
+	std::string data = sstr.str();
+
+	// 发送数据
+	Message msg;
+	msg.rescode = ResponseCode::RsaFenFa;
+	msg.data1 = data;
+	RsaCrypto rsa("private.pem", RsaCrypto::PRIVATE_KEY);
+	msg.data2 = rsa.sign(data);
+	Codec codec(&msg);
+	m_writeBuf->appendPackage(codec.encodeMessage());
 }
 
 int TcpConnection::processRead(void* arg)
@@ -40,33 +59,15 @@ int TcpConnection::processRead(void* arg)
 
 	if (count > 0)
 	{
-		// 接收到了 http 请求, 解析 http 请求
-#ifdef MSG_SEND_AUTO
-		conn->m_channel->writeEventEnable(true);
-		conn->m_evLoop->addTask(conn->m_channel, ElemType::MODIFY);
-#endif
-		bool flag = conn->m_request->parseHttpRequest(conn->m_readBuf, conn->m_response, conn->m_writeBuf, socketFd);
-		if (!flag)
-		{
-			// 解析失败，回复一个简单的 html
-			std::string errMsg = "HTTP/1.1 400 Bad Request\r\n\r\n";
-			conn->m_writeBuf->appendString(errMsg);
-#ifndef MSG_SEND_AUTO
-			conn->m_writeBuf->sendData(socketFd);
-#endif
-		}
+		// 解析客户端请求
+
 	}
-	else
+	else if (count <= 0)
 	{
-#ifdef MSG_SEND_AUTO
-		// 断开连接
-		conn->m_evLoop->addTask(conn->m_channel, ElemType::DELETE);
-#endif
+		// 断开客户端连接
+
 	}
-#ifndef MSG_SEND_AUTO
-	// 断开连接
-	conn->m_evLoop->addTask(conn->m_channel, ElemType::DELETE);
-#endif
+
 	return 0;
 }
 
@@ -85,8 +86,6 @@ int TcpConnection::processWrite(void* arg)
 			conn->m_channel->writeEventEnable(false);
 			// 2.修改 Dispatcher 检查的集合 -- 添加任务节点
 			conn->m_evLoop->addTask(conn->m_channel, ElemType::MODIFY);
-			// 3.删除节点
-			conn->m_evLoop->addTask(conn->m_channel, ElemType::DELETE);
 		}
 	}
 	return 0;

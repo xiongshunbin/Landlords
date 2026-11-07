@@ -70,12 +70,12 @@ const char descriptor_table_protodef_Information_2eproto[] PROTOBUF_SECTION_VARI
   "\001(\t\022\r\n\005data3\030\004 \001(\t\022\035\n\007reqcode\030\005 \001(\0162\014.Re"
   "questCode\022\036\n\007rescode\030\006 \001(\0162\r.ResponseCod"
   "e*.\n\013RequestCode\022\r\n\tUserLogin\020\000\022\020\n\014UserR"
-  "egister\020\001*+\n\014ResponseCode\022\013\n\007LoginOK\020\000\022\016"
-  "\n\nRegisterOK\020\001b\006proto3"
+  "egister\020\001*9\n\014ResponseCode\022\013\n\007LoginOK\020\000\022\016"
+  "\n\nRegisterOK\020\001\022\014\n\010RsaFenFa\020\002b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_Information_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Information_2eproto = {
-    false, false, 262, descriptor_table_protodef_Information_2eproto,
+    false, false, 276, descriptor_table_protodef_Information_2eproto,
     "Information.proto",
     &descriptor_table_Information_2eproto_once, nullptr, 0, 1,
     schemas, file_default_instances, TableStruct_Information_2eproto::offsets,
@@ -110,6 +110,7 @@ bool ResponseCode_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
+    case 2:
       return true;
     default:
       return false;

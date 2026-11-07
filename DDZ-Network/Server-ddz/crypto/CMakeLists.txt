@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(crypto)
+project(mycrypto)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -12,4 +12,6 @@ set(SRC
 )
 
 # 把源文件制作成静态库
-add_library(crypto STATIC ${SRC})
+add_library(mycrypto STATIC ${SRC})
+
+target_link_libraries(mycrypto crypto)
