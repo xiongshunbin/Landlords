@@ -33,6 +33,9 @@ public:
 	inline const char* data() const { return m_data + m_readPos; }
 	inline int readPosIncrease(int count) { return (m_readPos += count); }
 
+	// 根据参数读出指定长度的数据
+	std::string data(int length);
+
 private:
 	char* m_data = nullptr;		// 指向内存的指针
 	int m_capacity = 0;			// 内存大小

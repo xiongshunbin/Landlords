@@ -23,6 +23,11 @@ Login::Login(QWidget *parent) : QDialog(parent)
 
     // 设置线程池最大线程数量
     QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
+
+    ///< test
+    edit_login_userName->setText("mushan");
+    edit_login_userPassword->setText("1Aa*");
+    ///< test
 }
 
 Login::~Login()

@@ -79,11 +79,14 @@ std::string Hash::hash(std::string data, HashAlgorithm algorithm, Type type)
     return std::string(reinterpret_cast<char*>(md), len);
 }
 
-int Hash::hashLength(HashAlgorithm algorithm)
+int Hash::hashLength(HashAlgorithm algorithm, Type type)
 {
     auto it = HashMethods.find(algorithm);
     if (it == HashMethods.end())
         return -1;
 
-    return it->second.second;
+    int res = it->second.second;
+    if (type == Type::Hex)
+        res = res * 2;
+    return res;
 }

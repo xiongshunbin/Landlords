@@ -12,6 +12,11 @@ TcpConnection::TcpConnection(int fd, EventLoop* evLoop) : m_evLoop(evLoop)
 {
 	m_readBuf = new Buffer(10240);
 	m_writeBuf = new Buffer(10240);
+	m_reply = new Communication();
+
+	auto writeFunc = std::bind(&TcpConnection::addWriteTask, this, std::placeholders::_1);
+	auto deleteFunc = std::bind(&TcpConnection::addDeleteTask, this);
+	m_reply->setCallback(writeFunc, deleteFunc);
 
 	m_name = "Connection-" + std::to_string(fd);
 	prepareSecretKey();
@@ -49,6 +54,25 @@ void TcpConnection::prepareSecretKey()
 	m_writeBuf->appendPackage(codec.encodeMessage());
 }
 
+void TcpConnection::addWriteTask(std::string data)
+{
+	m_writeBuf->appendPackage(data);
+#ifdef MSG_SEND_AUTO	// 通过事件进行发送
+	// 1.检测写事件 -- 修改 Channel 中保存的事件
+	m_channel->setCurrentEvent(FDEvent::WriteEvent);
+	// 2.修改 Dispatcher 检查的集合 -- 添加任务节点
+	m_evLoop->addTask(m_channel, ElemType::MODIFY);
+#else					// 直接进行发送
+	m_writeBuf->sendData(m_channel->getSocketFd());
+#endif
+}
+
+void TcpConnection::addDeleteTask()
+{
+	m_evLoop->addTask(m_channel, ElemType::DELETE);
+	spdlog::get("basic_logger")->info("客户端连接断开, ConnectionName: {}", m_name);
+}
+
 int TcpConnection::processRead(void* arg)
 {
 	TcpConnection* conn = static_cast<TcpConnection*>(arg);
@@ -60,12 +84,12 @@ int TcpConnection::processRead(void* arg)
 	if (count > 0)
 	{
 		// 解析客户端请求
-
+		conn->m_reply->parseRequest(conn->m_readBuf);
 	}
 	else if (count <= 0)
 	{
 		// 断开客户端连接
-
+		conn->addDeleteTask();
 	}
 
 	return 0;
@@ -83,7 +107,7 @@ int TcpConnection::processWrite(void* arg)
 		if (conn->m_writeBuf->readableSize() == 0)
 		{
 			// 1.不再检测写事件 -- 修改 Channel 中保存的事件
-			conn->m_channel->writeEventEnable(false);
+			conn->m_channel->setCurrentEvent(FDEvent::ReadEvent);
 			// 2.修改 Dispatcher 检查的集合 -- 添加任务节点
 			conn->m_evLoop->addTask(conn->m_channel, ElemType::MODIFY);
 		}

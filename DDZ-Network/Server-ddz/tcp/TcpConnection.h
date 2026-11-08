@@ -5,8 +5,9 @@
 #include "Channel.h"
 #include "HttpRequest.h"
 #include "HttpResponse.h"
+#include "Communication.h"
 
-//#define MSG_SEND_AUTO
+// #define MSG_SEND_AUTO
 
 class TcpConnection
 {
@@ -16,6 +17,12 @@ public:
 
 	// 准备密钥
 	void prepareSecretKey();
+
+	// 发送数据
+	void addWriteTask(std::string data);
+
+	// 释放资源
+	void addDeleteTask();
 
 private:
 	static int processRead(void* arg);
@@ -28,4 +35,5 @@ private:
 	Channel* m_channel = nullptr;
 	Buffer* m_readBuf = nullptr;
 	Buffer* m_writeBuf = nullptr;
+	Communication* m_reply = nullptr;
 };

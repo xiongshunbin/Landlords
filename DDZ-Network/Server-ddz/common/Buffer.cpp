@@ -79,7 +79,7 @@ int Buffer::appendString(const char* data)
 
 int Buffer::appendString(const std::string msg)
 {
-	int ret = appendString(msg.data());
+	int ret = appendString(msg.c_str(), msg.size());
 	return ret;
 }
 
@@ -158,4 +158,11 @@ int Buffer::sendData(int fd)
 		return count;
 	}
 	return 0;
+}
+
+std::string Buffer::data(int length)
+{
+	std::string res(m_data + m_readPos, length);
+	m_readPos += length;
+	return res;
 }

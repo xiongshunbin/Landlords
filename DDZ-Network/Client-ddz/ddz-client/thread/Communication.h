@@ -10,6 +10,13 @@ class Communication : public QObject, public QRunnable
 {
     Q_OBJECT
 public:
+    enum KeyLen
+    {
+        Len16 = 16,
+        Len24 = 24,
+        Len32 = 32
+    };
+
     explicit Communication(Message *msg, QObject *parent = nullptr);
 
     inline void stopLoop() { m_stop = true; }
@@ -19,6 +26,12 @@ public:
 
     // 解析接收到的服务器发送的数据
     void parseRecvMessage();
+
+    // 密钥分发
+    void handleRsaFenFa(Message *msg);
+
+    // 生成对称加密的密钥(AES)
+    QByteArray generateAesKey(KeyLen len);
 
 protected:
     void run() override;

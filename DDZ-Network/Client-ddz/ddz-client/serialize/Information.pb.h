@@ -55,12 +55,13 @@ PROTOBUF_NAMESPACE_CLOSE
 enum RequestCode : int {
   UserLogin = 0,
   UserRegister = 1,
+  AesFenFa = 2,
   RequestCode_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   RequestCode_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool RequestCode_IsValid(int value);
 constexpr RequestCode RequestCode_MIN = UserLogin;
-constexpr RequestCode RequestCode_MAX = UserRegister;
+constexpr RequestCode RequestCode_MAX = AesFenFa;
 constexpr int RequestCode_ARRAYSIZE = RequestCode_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* RequestCode_descriptor();
@@ -80,12 +81,15 @@ inline bool RequestCode_Parse(
 enum ResponseCode : int {
   LoginOK = 0,
   RegisterOK = 1,
+  RsaFenFa = 2,
+  AesVerifyOK = 3,
+  Failed = 4,
   ResponseCode_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   ResponseCode_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool ResponseCode_IsValid(int value);
 constexpr ResponseCode ResponseCode_MIN = LoginOK;
-constexpr ResponseCode ResponseCode_MAX = RegisterOK;
+constexpr ResponseCode ResponseCode_MAX = Failed;
 constexpr int ResponseCode_ARRAYSIZE = ResponseCode_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ResponseCode_descriptor();

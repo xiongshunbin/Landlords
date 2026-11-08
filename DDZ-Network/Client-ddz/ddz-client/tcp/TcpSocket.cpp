@@ -162,7 +162,7 @@ int TcpSocket::readn(char *buffer, int count)
     char* pt = buffer;
     while(last > 0)
     {
-        if ((size = recv(m_socket, pt, last, 0)) != -1)
+        if ((size = recv(m_socket, pt, last, 0)) == -1)
         {
             perror("recv");
             return -1;
@@ -184,7 +184,7 @@ int TcpSocket::writen(const char *buffer, int count)
     const char* pt = buffer;
     while(last > 0)
     {
-        if ((size = send(m_socket, pt, last, 0)) != -1)
+        if ((size = send(m_socket, pt, last, 0)) == -1)
         {
             perror("send");
             return -1;

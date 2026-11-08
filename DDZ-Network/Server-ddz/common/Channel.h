@@ -27,8 +27,14 @@ public:
 	// 修改fd的写事件(检测 or 不检测)
 	void writeEventEnable(bool flag);
 
+	// 设置当前需要检测的事件
+	void setCurrentEvent(FDEvent event);
+
 	// 判断是否检测文件描述符的写事件
-	bool isWriteEventEnable();
+	bool isWriteEventEnable() const;
+
+	// 判断是否检测文件描述符的读事件
+	bool isReadEventEnable() const;
 
 	// 取出私有数据成员的值
 	inline int getSocketFd() const { return m_fd; }

@@ -2,6 +2,7 @@
 #include "Base64.h"
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
+#include <openssl/err.h>
 #include <cassert>
 
 RsaCrypto::RsaCrypto(std::string fileName, KeyType type)
@@ -160,7 +161,7 @@ std::string RsaCrypto::sign(std::string data, HashAlgorithm hash)
     // 计算哈希值
     Hash h(hash);
     h.addData(data);
-    std::string md = h.result();
+    std::string md = h.result(Hash::Type::Binary);
 
     // 创建上下文 ctx
     EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new(m_priKey, NULL);
@@ -184,6 +185,7 @@ std::string RsaCrypto::sign(std::string data, HashAlgorithm hash)
     assert(ret == 1);
     unsigned char* out = new unsigned char[outlen];
     ret = EVP_PKEY_sign(ctx, out, &outlen, reinterpret_cast<const unsigned char *>(md.data()), md.size());
+    ERR_print_errors_fp(stderr);
     assert(ret == 1);
 
     Base64 base64;
@@ -204,7 +206,7 @@ bool RsaCrypto::verify(std::string sign, std::string data, HashAlgorithm hash)
     // 计算哈希值
     Hash h(hash);
     h.addData(data);
-    std::string md = h.result();
+    std::string md = h.result(Hash::Type::Binary);
 
     // 创建上下文 ctx
     EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new(m_pubKey, NULL);

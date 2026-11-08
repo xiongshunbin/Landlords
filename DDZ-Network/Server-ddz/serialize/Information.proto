@@ -4,6 +4,7 @@ enum RequestCode
 {
     UserLogin = 0;
     UserRegister = 1;
+    AesFenFa = 2;
 };
 
 enum ResponseCode
@@ -11,6 +12,8 @@ enum ResponseCode
     LoginOK = 0;
     RegisterOK = 1;
     RsaFenFa = 2;
+    AesVerifyOK = 3;
+    Failed = 4;
 };
 
 message Information
