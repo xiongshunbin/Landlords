@@ -10,3 +10,5 @@ set(SRC
 
 # 把源文件制作成静态库
 add_library(game STATIC ${SRC})
+
+target_link_libraries(game mycrypto)

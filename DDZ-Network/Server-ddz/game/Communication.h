@@ -4,12 +4,16 @@
 #include "Buffer.h"
 #include "Codec.h"
 #include <string>
+#include "AesCrypto.h"
 
 class Communication
 {
 public:
     using sendCallback = std::function<void(std::string)>;
     using deleteCallback = std::function<void()>;
+
+    Communication() = default;
+    ~Communication();
 
     // 解析客户端发送的数据
     void parseRequest(Buffer* buf);
@@ -21,9 +25,9 @@ public:
     void setCallback(sendCallback func1, deleteCallback func2);
 
 private:
-    std::string m_aesKey;
     sendCallback f_sendMessage;
     deleteCallback f_disconnect;
+    AesCrypto* m_aes = nullptr;
 };
 
 

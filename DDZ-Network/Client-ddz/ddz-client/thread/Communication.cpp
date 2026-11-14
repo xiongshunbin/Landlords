@@ -11,20 +11,25 @@ Communication::Communication(Message *msg, QObject *parent)
     this->setAutoDelete(true);
 }
 
-bool Communication::sendMessage(Message *msg)
+bool Communication::sendMessage(Message *msg, bool encrypt)
 {
     Codec codec(msg);
     QByteArray data = codec.encodeMessage();
-    // 数据加密
 
-    bool flag = m_socket->sendMessage(data);
+    // 数据加密
+    if (encrypt)
+    {
+        data = m_aes->encrypt(data);
+    }
+
+    bool flag = m_socket->sendMsg(data);
     return flag;
 }
 
 void Communication::parseRecvMessage()
 {
     // 接收数据
-    QByteArray data = m_socket->receiveMessage(2);
+    QByteArray data = m_socket->recvMsg(2);
     if (data.isEmpty())
         return;
 
@@ -43,7 +48,7 @@ void Communication::parseRecvMessage()
         handleRsaFenFa(ptr.get());
         break;
     case ResponseCode::AesVerifyOK:
-        qDebug() << "AES密钥分发成功!";
+        handleAesVerifyOK();
         break;
     case ResponseCode::Failed:
         break;
@@ -73,13 +78,20 @@ void Communication::handleRsaFenFa(Message* msg)
     }
 
     // 生成对称加密的密钥
-    QByteArray aesKey = generateAesKey(KeyLen::Len32);
+    m_aesKey = generateAesKey(KeyLen::Len32);
 
     Message reqMsg;
     reqMsg.reqcode = RequestCode::AesFenFa;
-    reqMsg.data1 = rsa.pubKeyEncrypt(aesKey);
-    reqMsg.data2 = QCryptographicHash::hash(aesKey, QCryptographicHash::Sha224).toHex();    // 16进制数字串格式的哈希值
-    sendMessage(&reqMsg);
+    reqMsg.data1 = rsa.pubKeyEncrypt(m_aesKey);
+    reqMsg.data2 = QCryptographicHash::hash(m_aesKey, QCryptographicHash::Sha224).toHex();    // 16进制数字串格式的哈希值
+    sendMessage(&reqMsg, false);
+}
+
+void Communication::handleAesVerifyOK()
+{
+    qDebug() << "AES密钥分发成功!";
+    m_aes = new AesCrypto(AesCrypto::AES_CBC_256, m_aesKey, this);
+    sendMessage(m_msgInfo);
 }
 
 /**

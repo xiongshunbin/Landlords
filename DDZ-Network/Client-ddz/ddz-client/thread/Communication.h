@@ -5,6 +5,7 @@
 #include <QRunnable>
 #include "TcpSocket.h"
 #include "Codec.h"
+#include "AesCrypto.h"
 
 class Communication : public QObject, public QRunnable
 {
@@ -22,13 +23,16 @@ public:
     inline void stopLoop() { m_stop = true; }
 
     // 发送数据
-    bool sendMessage(Message *msg);
+    bool sendMessage(Message *msg, bool encrypt = true);
 
     // 解析接收到的服务器发送的数据
     void parseRecvMessage();
 
     // 密钥分发
     void handleRsaFenFa(Message *msg);
+
+    // 密钥分发成功
+    void handleAesVerifyOK();
 
     // 生成对称加密的密钥(AES)
     QByteArray generateAesKey(KeyLen len);
@@ -43,6 +47,8 @@ private:
     bool m_stop = false;
     Message* m_msgInfo = nullptr;
     TcpSocket* m_socket = nullptr;
+    QByteArray m_aesKey;
+    AesCrypto* m_aes = nullptr;
 };
 
 #endif // COMMUNICATION_H

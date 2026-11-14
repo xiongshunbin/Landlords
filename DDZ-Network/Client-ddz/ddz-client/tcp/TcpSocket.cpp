@@ -44,7 +44,7 @@ bool TcpSocket::connectToServer(QByteArray ip, unsigned short port)
     return flag;
 }
 
-QByteArray TcpSocket::receiveMessage(int timeout_sec)
+QByteArray TcpSocket::recvMsg(int timeout_sec)
 {
     bool flag = readTimeout(timeout_sec);
     QByteArray array = QByteArray();
@@ -71,7 +71,7 @@ QByteArray TcpSocket::receiveMessage(int timeout_sec)
     return array;
 }
 
-bool TcpSocket::sendMessage(QByteArray msg, int timeout_sec)
+bool TcpSocket::sendMsg(QByteArray msg, int timeout_sec)
 {
     bool flag = writeTimeout(timeout_sec);
     if (flag)

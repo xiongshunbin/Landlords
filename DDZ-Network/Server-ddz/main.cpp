@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 	// 切换服务器的工作目录
 	chdir(argv[2]);
 #else
-	unsigned short port = 10000;
+	unsigned short port = 8888;
 	chdir("/home/wsl-ubuntu/Test/luffy/");
 	//chdir("/home/mushan/Test");
 #endif

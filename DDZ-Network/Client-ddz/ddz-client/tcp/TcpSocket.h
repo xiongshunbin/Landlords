@@ -20,9 +20,9 @@ public:
     // 连接服务器
     bool connectToServer(QByteArray ip, unsigned short port);
     // 接收数据
-    QByteArray receiveMessage(int timeout_sec = -1);    // 单位: 秒
+    QByteArray recvMsg(int timeout_sec = -1);    // 单位: 秒
     // 发送数据
-    bool sendMessage(QByteArray msg, int timeout_sec = -1);
+    bool sendMsg(QByteArray msg, int timeout_sec = -1);
     // 断开连接
     void disConnect();
 
