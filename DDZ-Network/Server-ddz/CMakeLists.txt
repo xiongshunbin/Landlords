@@ -15,6 +15,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/game
         ${PROJECT_SOURCE_DIR}/database
         "/usr/local/ssl/include/"
+        "/usr/include/mysql"
         # 测试目录
         ${PROJECT_SOURCE_DIR}/test
 )
@@ -33,7 +34,10 @@ add_subdirectory(database)
 # 测试目录
 add_subdirectory(test)
 
-link_directories("/usr/local/ssl/lib64/")
+link_directories(
+        "/usr/local/ssl/lib64/"
+        "/usr/lib/x86_64-linux-gnu/"
+)
 
 # 链接子目录中生成的静态库文件
 link_libraries(tcp http reactor thread common test mycrypto serialize game database)

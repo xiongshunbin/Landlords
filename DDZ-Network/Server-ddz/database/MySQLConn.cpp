@@ -3,38 +3,38 @@
 
 MySQLConn::MySQLConn()
 {
-    m_mysql = mysql_init(NULL);
-    mysql_set_character_set(m_mysql, "utf8");
+    m_conn = mysql_init(NULL);
+    mysql_set_character_set(m_conn, "utf8");
 }
 
 MySQLConn::~MySQLConn()
 {
     freeResult();
-    if (m_mysql != NULL)
-        mysql_close(m_mysql);
+    if (m_conn != NULL)
+        mysql_close(m_conn);
 }
 
 bool MySQLConn::connect(std::string host, std::string user,
     std::string passwd, std::string db, unsigned short port)
 {
-    MYSQL* ptr = mysql_real_connect(m_mysql, host.c_str(), user.c_str(),
+    MYSQL* ptr = mysql_real_connect(m_conn, host.c_str(), user.c_str(),
         passwd.c_str(), db.c_str(), port, NULL, 0);
 
     bool flag = (ptr != NULL);
     if (!flag)
     {
-        spdlog::get("basic_logger")->info("MSQL数据库连接失败, 原因: {}", mysql_error(m_mysql));
+        spdlog::get("basic_logger")->info("MySQL数据库连接失败, 原因: {}", mysql_error(m_conn));
     }
     return flag;
 }
 
 bool MySQLConn::executeSQL(std::string sql)
 {
-    int ret = mysql_query(m_mysql, sql.c_str());
+    int ret = mysql_query(m_conn, sql.c_str());
     bool flag = (ret == 0);
     if (!flag)
     {
-        spdlog::get("basic_logger")->info("MySQL语句执行失败, 内容: {}, 原因: {}", sql, mysql_error(m_mysql));
+        spdlog::get("basic_logger")->info("MySQL语句执行失败, 内容: {}, 原因: {}", sql, mysql_error(m_conn));
     }
     return flag;
 }
@@ -45,11 +45,11 @@ bool MySQLConn::query(std::string sql)
     if (!executeSQL(sql))
         return false;
 
-    m_result = mysql_store_result(m_mysql);
+    m_result = mysql_store_result(m_conn);
     bool flag = (m_result != NULL);
     if (!flag)
     {
-        spdlog::get("basic_logger")->info("MySQL结果集取出失败, 原因: {}", sql, mysql_error(m_mysql));
+        spdlog::get("basic_logger")->info("MySQL结果集取出失败, 原因: {}", sql, mysql_error(m_conn));
     }
     return flag;
 }
@@ -82,20 +82,20 @@ std::string MySQLConn::value(int index)
 
 bool MySQLConn::transaction()
 {
-    return mysql_autocommit(m_mysql, false);
+    return mysql_autocommit(m_conn, false);
 }
 
 bool MySQLConn::commit()
 {
-    bool flag1 = mysql_commit(m_mysql);
-    bool flag2 = mysql_autocommit(m_mysql, true);
+    bool flag1 = mysql_commit(m_conn);
+    bool flag2 = mysql_autocommit(m_conn, true);
     return flag1 && flag2;
 }
 
 bool MySQLConn::rollback()
 {
-    bool flag1 = mysql_rollback(m_mysql);
-    bool flag2 = mysql_autocommit(m_mysql, true);
+    bool flag1 = mysql_rollback(m_conn);
+    bool flag2 = mysql_autocommit(m_conn, true);
     return flag1 && flag2;
 }
 

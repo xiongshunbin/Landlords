@@ -3,12 +3,6 @@ project(database)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# 设置头文件所在路径
-include_directories("/usr/include/mysql")
-
-# 设置要加载的库路径
-link_directories("/usr/lib/x86_64-linux-gnu/")
-
 # 取出当前目录中所有的源文件, 存储到一个变量中
 set(SRC
     MySQLConn.cpp

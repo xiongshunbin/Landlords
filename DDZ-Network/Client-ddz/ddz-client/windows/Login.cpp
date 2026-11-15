@@ -276,10 +276,14 @@ void Login::startConnect(Message *msg)
 {
     if (!m_isConnected)
     {
-        Communication* task = new Communication(msg);
+        Communication* task = new Communication(*msg);
         connect(task, &Communication::connectFailed, this, &Login::onConnectFailed);
+        connect(task, &Communication::loginOK, this, &Login::onLoginOK);
+        connect(task, &Communication::registerOK, this, &Login::onRegisterOK);
+        connect(task, &Communication::requestFailed, this, &Login::onRequestFailed);
         m_isConnected = true;
         QThreadPool::globalInstance()->start(task);
+        DataManager::getInstance().setCommunication(task);
     }
     else
     {
@@ -298,7 +302,7 @@ void Login::onLogin()
         msg.userName = edit_login_userName->text().toUtf8();
         msg.reqcode = RequestCode::UserLogin;
         QByteArray passwd = edit_login_userPassword->text().toUtf8();
-        msg.data1 = QCryptographicHash::hash(passwd, QCryptographicHash::Sha256);
+        msg.data1 = QCryptographicHash::hash(passwd, QCryptographicHash::Sha256).toHex();
 
         // 连接服务器
         startConnect(&msg);
@@ -316,7 +320,7 @@ void Login::onRegister()
         msg.userName = edit_register_userName->text().toUtf8();
         msg.reqcode = RequestCode::UserRegister;
         QByteArray passwd = edit_register_userPassword->text().toUtf8();
-        msg.data1 = QCryptographicHash::hash(passwd, QCryptographicHash::Sha256);
+        msg.data1 = QCryptographicHash::hash(passwd, QCryptographicHash::Sha256).toHex();
         msg.data2 = edit_register_phoneNumber->text().toUtf8();
 
         // 连接服务器
@@ -340,4 +344,22 @@ void Login::onConnectFailed()
 {
     QMessageBox::critical(this, u8"连接服务器", u8"连接服务器失败!");
     m_isConnected = false;
+}
+
+void Login::onLoginOK()
+{
+    DataManager::getInstance().setUserName(edit_login_userName->text().toUtf8());
+    // 保存当前用户名和密码(记住密码)
+
+    // 显示游戏模式选择窗口(单机/网络)
+}
+
+void Login::onRegisterOK()
+{
+    stackedWidget->setCurrentIndex(0);
+}
+
+void Login::onRequestFailed(QByteArray msg)
+{
+    QMessageBox::critical(this, "ERROR", msg);
 }

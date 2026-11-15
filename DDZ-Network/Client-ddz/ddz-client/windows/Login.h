@@ -35,6 +35,9 @@ public slots:
     void onSettingsConfirm();
 
     void onConnectFailed();
+    void onLoginOK();
+    void onRegisterOK();
+    void onRequestFailed(QByteArray msg);
 
 private:
     void createLoginPage(QWidget* loginPage);

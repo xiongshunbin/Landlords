@@ -41,7 +41,7 @@ private:
     void freeResult();
 
 private:
-    MYSQL* m_mysql = NULL;
+    MYSQL* m_conn = NULL;
     MYSQL_RES* m_result = NULL;
     MYSQL_ROW m_row = NULL;
 };

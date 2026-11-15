@@ -18,7 +18,8 @@ public:
         Len32 = 32
     };
 
-    explicit Communication(Message *msg, QObject *parent = nullptr);
+    explicit Communication(const Message& msg, QObject *parent = nullptr);
+    ~Communication();
 
     inline void stopLoop() { m_stop = true; }
 
@@ -42,10 +43,13 @@ protected:
 
 signals:
     void connectFailed();
+    void loginOK();
+    void registerOK();
+    void requestFailed(QByteArray msg);
 
 private:
     bool m_stop = false;
-    Message* m_msgInfo = nullptr;
+    Message m_msgInfo;
     TcpSocket* m_socket = nullptr;
     QByteArray m_aesKey;
     AesCrypto* m_aes = nullptr;

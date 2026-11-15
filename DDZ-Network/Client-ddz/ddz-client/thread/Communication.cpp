@@ -5,10 +5,16 @@
 #include <QDebug>
 #include <QDateTime>
 
-Communication::Communication(Message *msg, QObject *parent)
+Communication::Communication(const Message &msg, QObject *parent)
     : QObject{parent}, m_msgInfo{msg}
 {
     this->setAutoDelete(true);
+}
+
+Communication::~Communication()
+{
+    if (m_aes != nullptr)
+        delete m_aes;
 }
 
 bool Communication::sendMessage(Message *msg, bool encrypt)
@@ -41,8 +47,10 @@ void Communication::parseRecvMessage()
     switch(ptr->rescode)
     {
     case ResponseCode::LoginOK:
+        emit loginOK();
         break;
     case ResponseCode::RegisterOK:
+        emit registerOK();
         break;
     case ResponseCode::RsaFenFa:
         handleRsaFenFa(ptr.get());
@@ -51,6 +59,7 @@ void Communication::parseRecvMessage()
         handleAesVerifyOK();
         break;
     case ResponseCode::Failed:
+        emit requestFailed(ptr->data1);
         break;
     default:
         break;
@@ -90,8 +99,8 @@ void Communication::handleRsaFenFa(Message* msg)
 void Communication::handleAesVerifyOK()
 {
     qDebug() << "AES密钥分发成功!";
-    m_aes = new AesCrypto(AesCrypto::AES_CBC_256, m_aesKey, this);
-    sendMessage(m_msgInfo);
+    m_aes = new AesCrypto(AesCrypto::AES_CBC_256, m_aesKey);
+    sendMessage(&m_msgInfo);
 }
 
 /**
